@@ -1,0 +1,24 @@
+After very detail analyzing the data, I create a data pipeline. I design it for a movie recommendation system. I use Python 2.7 as a programming language and neo4j for graph database. 
+
+You can find 1 folder and 3 files in the repository. "graphdb" folder is zipped due to sizing problem and it is including 7 datasets for using graph db. "rr_movielens.ipynb" and "rr_movielens.py" files have python scripts which is used to create data pipeline. Both files are including same scripts. "rr_movielens.ipynb" is a Jupyter notebook file and it is better for visuliation. "neo4j_queries.txt" file includes neo4j db queries. There is import queries and also a query for movie recommendation.
+
+7 datasets are created for graph db and 3 of them nodes and others for relationships. You can find details of tables below;
+
+Nodes
+1- ml_users (userId): This data includes users' id and it has only one column. It is created with using "ratings.csv" data. We will create users nodes and it will have relations with movies and genres nodes
+2- ml_movies (movieId, title, rating_mean): This data invludes movies' id and title fields. It is created with using "movies.csv" data. Movies node will have relations with users and genres nodes and it has relationship to itself as well
+3- ml_genres (genres): It is small data it has 19 rows it keeps genres types
+
+Relationships
+1- ml_users_movies (userId, movieId, rating): This data will use create a relationship between users and movies nodes. It is created with using "ratings.csv" data
+2- ml_movies_genres (movieId, genres): This data will use create a relationship between movies and genres nodes. It is created with using "movies.csv" 
+data
+3- ml_users_genres (userId, genres): This data will use create a relationship between users and genres nodes. genres is a calculated field. It includes the most popular genre of the user. To calculate the most popular genre, I use count of the genres. I thought to use ratings but after some checks I decided to use counts instead of ratings
+4- ml_movies_similarity (movieId, sim_movieId, relevance): This is the most critical data in this pipeline. It includes 5 rows for each movies. I calculate similarity through movies. I use 3 groups of similarity and mix them. 3 groups are tag similarity, genre similarity and rating,year,rating count similarity. To calculate similarity, I use cosine similarity because I think Cosine similarity often allows better semantics since the high dimensionality.
+
+ml_movies_similarity is the most important dataset. I create 3 df (mov_tag_df, mov_genres_df, mov_rating_df) and calculate 3 cosine similarity and then  mix them. While mix the data sets, I use (mov_tag_df0.5+mov_genres_df0.25+mov_rating_df*0.25) formula. In this case tags are the most important data to calculate similarity so it effects to similarity calculation more than others.
+
+After datasets are ready, I load data to neo4j db from 7 data sets. Loading scripts are in "neo4j_queries.txt" file. And there is also query to recommend movies to users. I run it for a user and limit it for 5 records. It can be adjustable.
+
+I added comments to the scripts to try to explain. I hope everything is clear!
+
