@@ -8,12 +8,12 @@ FIELDTERMINATOR '|'
 CREATE (:Users {userId: row.userId});
 
 USING PERIODIC COMMIT
-LOAD CSV WITH HEADERS FROM "file:///Users/aliyesilli/Documents/rr_movielens/graphdb/ml_movies.csv" AS row
+LOAD CSV WITH HEADERS FROM "file:///ml_movies.csv" AS row
 FIELDTERMINATOR '|'
 CREATE (:Movies {movieId: row.movieId, title: row.title, rating_mean: row.rating_mean});
 
 USING PERIODIC COMMIT
-LOAD CSV WITH HEADERS FROM "file:///Users/aliyesilli/Documents/rr_movielens/graphdb/ml_genres.csv" AS row
+LOAD CSV WITH HEADERS FROM "file:///ml_genres.csv" AS row
 FIELDTERMINATOR '|'
 CREATE (:Genres {genres: row.genres});
 
@@ -32,21 +32,21 @@ CREATE INDEX ON :Movies(movieId);
 ### LOAD AND CREATE RELATIONSHIPS
 
 USING PERIODIC COMMIT
-LOAD CSV WITH HEADERS FROM "file:///Users/aliyesilli/Documents/rr_movielens/graphdb/ml_users_movies.csv" AS row
+LOAD CSV WITH HEADERS FROM "file:///ml_users_movies.csv" AS row
 FIELDTERMINATOR '|'
 MATCH (user:Users {userId: row.userId})
 MATCH (movie:Movies {movieId: row.movieId})
 MERGE (user)-[:WATCHED {rating: row.rating}]->(movie);
 
 USING PERIODIC COMMIT
-LOAD CSV WITH HEADERS FROM "file:///Users/aliyesilli/Documents/rr_movielens/graphdb/ml_users_genres.csv" AS row
+LOAD CSV WITH HEADERS FROM "file:///ml_users_genres.csv" AS row
 FIELDTERMINATOR '|'
 MATCH (user:Users {userId: row.userId})
 MATCH (genres:Genres {genres: row.genre})
 MERGE (user)-[:POPULAR]->(genres);
 
 USING PERIODIC COMMIT
-LOAD CSV WITH HEADERS FROM "file:///Users/aliyesilli/Documents/rr_movielens/graphdb/ml_movies_genres.csv" AS row
+LOAD CSV WITH HEADERS FROM "file:///ml_movies_genres.csv" AS row
 FIELDTERMINATOR '|'
 MATCH (movie:Movies {movieId: row.movieId})
 MATCH (genres:Genres {genres: row.genres})
@@ -57,12 +57,6 @@ MERGE (movie)-[:GENRE]->(genres);
 ###################################################
 ### QUERY FOR MOVIE RECOMMENDATION
 
-USING PERIODIC COMMIT
-LOAD CSV WITH HEADERS FROM "file:///Users/aliyesilli/Documents/rr_movielens/graphdb/ml_movies_similarity.csv" AS row
-FIELDTERMINATOR '|'
-MATCH (movie1:Movies {movieId: row.movieId})
-MATCH (movie2:Movies {movieId: row.sim_moveId})
-MERGE (movie1)-[:SIMILAR {relevance: row.relevance}]->(movie2);
 MATCH (u1:Users)-[:WATCHED]->(m3:Movies)
 WHERE u1.userId =~'4'
 WITH [i in m3.movieId | i] as movies
