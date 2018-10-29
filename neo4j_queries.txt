@@ -52,6 +52,12 @@ MATCH (movie:Movies {movieId: row.movieId})
 MATCH (genres:Genres {genres: row.genres})
 MERGE (movie)-[:GENRE]->(genres);
 
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM "file:///ml_movies_similarity.csv" AS row
+FIELDTERMINATOR '|'
+MATCH (movie1:Movies {movieId: row.movieId})
+MATCH (movie2:Movies {movieId: row.sim_moveId})
+MERGE (movie1)-[:SIMILAR {relevance: row.relevance}]->(movie2);
 
 ###################################################
 ###################################################
