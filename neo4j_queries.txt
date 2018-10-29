@@ -69,7 +69,7 @@ WITH [i in m3.movieId | i] as movies
 MATCH path = (u:Users)-[:WATCHED]->(m1:Movies)-[s:SIMILAR]->(m2:Movies),
 (m2)-[:GENRE]->(g:Genres),
 (u)-[:POPULAR]->(g)
-WHERE u.userId =~'2' and not m2.movieId in movies
+WHERE u.userId =~'4' and not m2.movieId in movies
 RETURN distinct u.userId as userId, g.genres as genres, 
 m2.title as title, m2.rating_mean as rating
 ORDER BY m2.rating_mean descending
@@ -77,11 +77,11 @@ LIMIT 5
 
 
 userId	genres	title	rating
-"2"	"Sci-Fi"	"Star Wars: Episode IV - A New Hope (1977)"	"4.190671901948552"
-"2"	"Sci-Fi"	"Star Wars: Episode V - The Empire Strikes Back (1980)"	"4.188202061218635"
-"2"	"Sci-Fi"	"Matrix, The (1999)"	"4.187185880702848"
-"2"	"Sci-Fi"	"Blade Runner (1982)"	"4.133705693507174"
-"2"	"Sci-Fi"	"Aliens (1986)"	"4.005642137763728"
+"4"	"Action"	"French Connection, The (1971)"	"3.9614397386535996"
+"4"	"Action"	"Die Hard (1988)"	"3.9338465081088194"
+"4"	"Action"	"Terminator, The (1984)"	"3.8963923539441803"
+"4"	"Action"	"Edge of Tomorrow (2014)"	"3.8436374549819927"
+"4"	"Action"	"Dirty Harry (1971)"	"3.781862745098039"
 
 
 
